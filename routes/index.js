@@ -1,9 +1,12 @@
 const express = require('express');
+
 const router = express.Router();
+
 const { HTTP_STATUS_NOT_FOUND } = require('../utils/constants');
 
 // Подключаем обработчики маршрутов для пользователей и карточек
 const users = require('./users');
+
 const cards = require('./cards');
 
 // Регистрируем маршруты для пользователей и карточек
