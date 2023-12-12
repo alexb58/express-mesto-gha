@@ -11,7 +11,6 @@ const {
 
 const getCards = (req, res) => {
   Card.find({})
-    .populate(['owner', 'likes'])
     .then((cards) => res.send(cards))
     .catch((err) => {
       res
@@ -71,7 +70,6 @@ const changeLikeCardStatus = (req, res, likeOtpions) => {
   const { cardId } = req.params;
   Card.findByIdAndUpdate(cardId, likeOtpions, { new: true })
     .orFail()
-    .then((card) => card.populate(['owner', 'likes']))
     .then((card) => res.send(card))
     .catch((err) => {
       if (err instanceof CastError) {
