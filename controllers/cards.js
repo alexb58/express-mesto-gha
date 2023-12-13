@@ -24,7 +24,6 @@ const createCard = (req, res) => {
   const { _id: userId } = req.user;
 
   Card.create({ name, link, owner: userId })
-    .then((card) => card.populate('owner'))
     .then((card) => res.status(HTTP_STATUS_CREATED).send(card))
     .catch((err) => {
       if (err instanceof ValidationError) {
@@ -66,9 +65,9 @@ const deleteCardById = (req, res) => {
     });
 };
 
-const changeLikeCardStatus = (req, res, likeOtpions) => {
+const changeLikeCardStatus = (req, res, likeOptions) => {
   const { cardId } = req.params;
-  Card.findByIdAndUpdate(cardId, likeOtpions, { new: true })
+  Card.findByIdAndUpdate(cardId, likeOptions, { new: true })
     .orFail()
     .then((card) => res.send(card))
     .catch((err) => {

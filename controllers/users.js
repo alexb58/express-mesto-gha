@@ -20,7 +20,6 @@ const getUsers = (req, res) => {
 };
 
 const getUserById = (req, res) => {
-  console.log(req.params);
   const { userId } = req.params;
 
   User.findById(userId)
@@ -109,12 +108,14 @@ const updateUserData = (req, res, updateOptions) => {
 };
 
 const updateProfile = (req, res) => {
-  const updateOptions = req.body;
+  const { name, about } = req.body;
+  const updateOptions = { name, about };
   updateUserData(req, res, updateOptions);
 };
 
 const updateAvatar = (req, res) => {
-  const updateOptions = req.body;
+  const { avatar } = req.body;
+  const updateOptions = { avatar };
   updateUserData(req, res, updateOptions);
 };
 
