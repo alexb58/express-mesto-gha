@@ -1,8 +1,10 @@
-class ConflictError extends Error {
+const { BAD_REQUEST_400 } = require('../utils/constants');
+
+class BadRequestError extends Error {
   constructor(message) {
     super(message);
-    this.statusCode = CONFLICT_409;
+    this.statusCode = BAD_REQUEST_400;
   }
 }
 
-module.exports = ConflictError;
+module.exports = BadRequestError;

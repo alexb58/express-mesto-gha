@@ -46,7 +46,13 @@ const getCurrentUserInfo = (req, res, next) => {
 };
 
 const createUser = (req, res, next) => {
-  const { name, about, avatar, email, password } = req.body;
+  const {
+    name,
+    about,
+    avatar,
+    email,
+    password,
+  } = req.body;
 
   bcrypt.hash(password, 10)
     .then((hash) => User.create({
@@ -112,13 +118,11 @@ const login = (req, res, next) => {
       })
         .send({ token });
     })
-    .catch((err) => {
-      if (err instanceof ValidationError) {
-        next(new BadRequestError('Введённый e-mail не соответствует формату'));
-      } else {
-        next(err);
-      }
-    });
+    .catch(next)
+};
+
+const logout = (req, res) => {
+  res.clearCookie('jwt').send({ message: 'Вы вышли из системы' });
 };
 
 const updateProfile = (req, res, next) => {
@@ -139,6 +143,7 @@ module.exports = {
   getUserById,
   createUser,
   login,
+  logout,
   updateProfile,
   updateAvatar,
 };
