@@ -9,7 +9,7 @@ const ConflictError = require('../errors/ConflictError');
 
 const User = require('../models/user');
 
-const { CREATED_201, CONFLICT_409 } = require('../utils/constants');
+const { CREATED_201 } = require('../utils/constants');
 
 const { JWT_SECRET } = require('../utils/config');
 
@@ -60,7 +60,7 @@ const createUser = (req, res, next) => {
     }))
     .then((user) => res.status(CREATED_201).send({ data: user }))
     .catch((err) => {
-      if (err.code === CONFLICT_409) {
+      if (err.code === 11000) {
         next(new ConflictError('Пользователь с таким email уже зарегистрирован'));
         return;
       }
