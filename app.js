@@ -1,30 +1,22 @@
+require('dotenv').config();
+
 const express = require('express');
-const rateLimit = require('express-rate-limit');
-
-const helmet = require('helmet');
-const cookieParser = require('cookie-parser');
-
 const mongoose = require('mongoose');
 
+const cookieParser = require('cookie-parser');
 const { errors } = require('celebrate');
-
-const { PORT = 3000 } = process.env;
+const helmet = require('helmet');
+const errorHandler = require('./middlewares/errorHandler');
+const limiter = require('./middlewares/limiter');
+const { requestLogger, errorLogger } = require('./middlewares/logger');
 
 const router = require('./routes/index');
 
-const errorHandler = require('./middlewares/errorHandler');
-
-const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 100,
-  standardHeaders: true,
-  legacyHeaders: false,
-});
+const { PORT, DB } = require('./utils/config');
 
 const app = express();
-const dbUrl = 'mongodb://localhost:27017/mestodb';
 
-mongoose.connect(dbUrl, {
+mongoose.connect(DB, {
   useNewUrlParser: true,
 });
 
@@ -35,11 +27,12 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
+app.use(requestLogger);
+
 app.use(router);
 
+app.use(errorLogger);
 app.use(errors());
 app.use(errorHandler);
 
-app.listen(PORT, () => {
-  console.log(`App listening on port ${PORT}`);
-});
+app.listen(PORT);

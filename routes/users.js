@@ -1,9 +1,4 @@
 const router = require('express').Router();
-const {
-  userIdValidator,
-  userDataValidator,
-  userAvatarValidator,
-} = require('../middlewares/validators/userValidator');
 
 const {
   getUsers,
@@ -13,6 +8,13 @@ const {
   updateAvatar,
 } = require('../controllers/users');
 
+const {
+  userIdValidator,
+  userDataValidator,
+  userAvatarValidator,
+} = require('../middlewares/validators/userValidator');
+
+// Роутеры
 router.get('/', getUsers);
 
 router.get('/me', getCurrentUserInfo);

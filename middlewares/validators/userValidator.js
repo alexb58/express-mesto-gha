@@ -19,7 +19,6 @@ const loginValidator = celebrate({
 });
 
 const userIdValidator = celebrate({
-  // валидируем параметры, hex - шестнадцатеричная строка
   params: Joi.object().keys({
     userId: Joi.string().hex().length(24)
       .required(),
