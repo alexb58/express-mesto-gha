@@ -118,7 +118,7 @@ const login = (req, res, next) => {
       })
         .send({ token });
     })
-    .catch(next)
+    .catch(next);
 };
 
 const logout = (req, res) => {
