@@ -1,31 +1,38 @@
-const express = require('express');
+require('dotenv').config();
 
+const express = require('express');
 const mongoose = require('mongoose');
 
-const { PORT = 3000 } = process.env;
+const cookieParser = require('cookie-parser');
+const { errors } = require('celebrate');
+const helmet = require('helmet');
+const errorHandler = require('./middlewares/errorHandler');
+const limiter = require('./middlewares/limiter');
+const { requestLogger, errorLogger } = require('./middlewares/logger');
 
 const router = require('./routes/index');
 
-const app = express();
-const dbUrl = 'mongodb://localhost:27017/mestodb';
+const { PORT, DB } = require('./utils/config');
 
-mongoose.connect(dbUrl, {
+const app = express();
+
+mongoose.connect(DB, {
   useNewUrlParser: true,
 });
 
+app.use(limiter);
+app.use(helmet());
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 
-// Middleware для установки фиктивного пользователя в запросе
-app.use((req, res, next) => {
-  req.user = {
-    _id: '6439cc795a2a1fb8080e67ce',
-  };
-  next();
-});
+app.use(requestLogger);
 
 app.use(router);
 
-app.listen(PORT, () => {
-  console.log(`App listening on port ${PORT}`);
-});
+app.use(errorLogger);
+app.use(errors());
+app.use(errorHandler);
+
+app.listen(PORT);
