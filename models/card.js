@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const isUrl = require('validator/lib/isURL');
 
 const nameOptions = {
   type: String,
@@ -9,6 +10,10 @@ const nameOptions = {
 
 const linkOptions = {
   type: String,
+  validate: {
+    validator: (link) => isUrl(link, { protocols: ['http', 'https'], require_protocol: true }),
+    message: 'ссылка не соответствует формату',
+  },
   required: [true, 'не передана ссылка на изображение'],
 };
 
